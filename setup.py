@@ -17,6 +17,6 @@ setup(
     install_requires=read_requirements(),
     entry_points="""
         [console_scripts]
-        eve=eve.cli:cli
+        eve=eve.cmd:cli
     """,
 )
