@@ -13,15 +13,17 @@ from pdf2image.exceptions import (
 @click.group()
 @click.option('--pdf/--no-pdf', default=False)
 @click.option('--path', default='')
+@click.option('--afr/--no-afr', default=False)
 @click.option('--file_destination', '-f', help="set file distination where to put the images")
 @click.pass_context
-def cli(ctx, pdf, path, file_destination):
+def cli(ctx, pdf, path, afr, file_destination):
     # ensure that ctx.obj exists and is a dict (in case `cli()` is called
     # by means other than the `if` block below)
     ctx.ensure_object(dict)
 
     ctx.obj['IS_PDF'] = pdf
     ctx.obj['PATH'] = path
+    ctx.obj['SIZE'] = (773,1094) if afr else None
     ctx.obj['OUTPUT_DISTINATION'] = file_destination or path
 
 @cli.command()
@@ -61,6 +63,7 @@ def test(ctx):
 
 def service(ctx, pdf_path):
 
+    print('PAAATH:::::::',pdf_path)
     if (os.path.isfile(pdf_path)):
             pdf_dir =  ctx.obj['ROOT_DIR']+'\\'+os.path.basename(pdf_path).replace('.pdf', '')
             pdf_name = os.path.basename(pdf_path).replace('.pdf', '')
@@ -77,7 +80,8 @@ def service(ctx, pdf_path):
                 
                 try:
                     # Save the output image to pdf_dir variable with generated name
-                    images_from_path = convert_from_path(pdf_path)
+                    print('With size....',ctx.obj['SIZE'])
+                    images_from_path = convert_from_path(pdf_path, size=ctx.obj['SIZE'])
                 except PDFInfoNotInstalledError:
                     print("conda proppler binary not installed")
                 except PDFPageCountError:
@@ -91,6 +95,8 @@ def service(ctx, pdf_path):
                         # Save image to selected dir
                         file_name = pdf_dir+'//'+pdf_name+'_'+str(index+1)+'.jpg'
                         img.save(file_name)
+            else:
+                print("already had the files")
     
     else:
         print("Pdf file does not exist. %s" % (pdf_path))
