@@ -50,7 +50,7 @@ def convert(ctx):
             pass
         
         print('Converting pdf files in ')
-        pdf_files = list(glob.iglob(ctx.obj['PATH']+'/**/*.pdf', recursive = True))
+        pdf_files = list(glob.glob(ctx.obj['PATH']+'/**/*.pdf', recursive = True))
         for pdf_path in pdf_files:
             service(ctx, pdf_path)
 
