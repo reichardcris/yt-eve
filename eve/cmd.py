@@ -70,33 +70,30 @@ def service(ctx, pdf_path):
 
             print('Converting %s' % pdf_name)
 
-            if not os.path.isdir(pdf_dir):
-                try:
-                    os.mkdir(pdf_dir)
-                except OSError as exc:
-                    if exc.errno != errno.EEXIST:
-                        raise
-                    pass
-                
-                try:
-                    # Save the output image to pdf_dir variable with generated name
-                    print('With size....',ctx.obj['SIZE'])
-                    images_from_path = convert_from_path(pdf_path, size=ctx.obj['SIZE'])
-                except PDFInfoNotInstalledError:
-                    print("conda proppler binary not installed")
-                except PDFPageCountError:
-                    print("PDFPageCountError PDF is pages is broken")
-                except PDFSyntaxError:
-                    print("PDFSyntaxError Can't convert this pdf %s" % pdf_dir)
-                
-                #Get PIL images format and get their file names
-                for index,img in enumerate(images_from_path):
-                    if hasattr(img, 'filename'):
-                        # Save image to selected dir
-                        file_name = pdf_dir+'//'+pdf_name+'_'+str(index+1)+'.jpg'
-                        img.save(file_name)
-            else:
-                print("already had the files")
+            try:
+                os.mkdir(pdf_dir)
+            except OSError as exc:
+                if exc.errno != errno.EEXIST:
+                    raise
+                pass
+            
+            try:
+                # Save the output image to pdf_dir variable with generated name
+                print('With size....',ctx.obj['SIZE'])
+                images_from_path = convert_from_path(pdf_path, size=ctx.obj['SIZE'])
+            except PDFInfoNotInstalledError:
+                print("conda proppler binary not installed")
+            except PDFPageCountError:
+                print("PDFPageCountError PDF is pages is broken")
+            except PDFSyntaxError:
+                print("PDFSyntaxError Can't convert this pdf %s" % pdf_dir)
+            
+            #Get PIL images format and get their file names
+            for index,img in enumerate(images_from_path):
+                if hasattr(img, 'filename'):
+                    # Save image to selected dir
+                    file_name = pdf_dir+'//'+pdf_name+'_'+str(index+1)+'.jpg'
+                    img.save(file_name)
     
     else:
         print("Pdf file does not exist. %s" % (pdf_path))
