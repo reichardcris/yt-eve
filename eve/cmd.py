@@ -80,11 +80,7 @@ def service(ctx, pdf_path):
             try:
                 # Save the output image to pdf_dir variable with generated name
                 print('With size....',ctx.obj['SIZE'])
-                print('converting...')
-                print("path->")
-                print(pdf_path)
-                images_from_path = convert_from_path(pdf_path, size=ctx.obj['SIZE'])
-                print('on process convertion')
+                images_from_path = convert_from_path(pdf_path, size=ctx.obj['SIZE'], dpi=100)
             except PDFInfoNotInstalledError:
                 print("conda proppler binary not installed")
             except PDFPageCountError:
