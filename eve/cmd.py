@@ -29,7 +29,7 @@ def cli(ctx, pdf, path, afr, file_destination):
 @cli.command()
 @click.pass_context
 def convert(ctx):
-    ctx.obj['ROOT_DIR'] = ROOT_DIR = str(ctx.obj['OUTPUT_DISTINATION'])+'\\pdf_images'
+    ctx.obj['ROOT_DIR'] = ROOT_DIR = str(ctx.obj['OUTPUT_DISTINATION'])+'/pdf_images'
 
     #if pdf_images folder is not exist then will creates a folder called pdf_images
     print('creating pdf_images folder in: '+(ctx.obj['OUTPUT_DISTINATION']))
@@ -65,7 +65,7 @@ def service(ctx, pdf_path):
 
     print('PAAATH:::::::',pdf_path)
     if (os.path.isfile(pdf_path)):
-            pdf_dir =  ctx.obj['ROOT_DIR']+'\\'+os.path.basename(pdf_path).replace('.pdf', '')
+            pdf_dir =  ctx.obj['ROOT_DIR']+'/'+os.path.basename(pdf_path).replace('.pdf', '')
             pdf_name = os.path.basename(pdf_path).replace('.pdf', '')
 
             print('Converting %s' % pdf_name)
@@ -80,7 +80,11 @@ def service(ctx, pdf_path):
             try:
                 # Save the output image to pdf_dir variable with generated name
                 print('With size....',ctx.obj['SIZE'])
+                print('converting...')
+                print("path->")
+                print(pdf_path)
                 images_from_path = convert_from_path(pdf_path, size=ctx.obj['SIZE'])
+                print('on process convertion')
             except PDFInfoNotInstalledError:
                 print("conda proppler binary not installed")
             except PDFPageCountError:
@@ -88,12 +92,15 @@ def service(ctx, pdf_path):
             except PDFSyntaxError:
                 print("PDFSyntaxError Can't convert this pdf %s" % pdf_dir)
             
+            print("images_from_path->")
+            print(images_from_path)
             #Get PIL images format and get their file names
             for index,img in enumerate(images_from_path):
                 if hasattr(img, 'filename'):
                     # Save image to selected dir
-                    file_name = pdf_dir+'//'+pdf_name+'_'+str(index+1)+'.jpg'
+                    file_name = pdf_dir+'/'+pdf_name+'_'+str(index+1)+'.jpg'
                     img.save(file_name)
+                    print(file_name)
     
     else:
         print("Pdf file does not exist. %s" % (pdf_path))
